@@ -1,0 +1,8 @@
+#cloud-config
+packages:
+ - httpd
+
+runcmd:
+ - systemctl start httpd
+ - sudo systemctl enable httpd
+#  -  [echo "Welcome!"> /var/www/html/]
