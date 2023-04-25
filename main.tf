@@ -7,9 +7,8 @@ data "aws_vpc" "awsome_vpc" {
   id = var.vpc_id
 }
 
-data "aws_subnet" "awesome_pub_sub2"{
-    id = "subnet-0585a38bbc245f202"
-  
+data "aws_subnet_ids" "pub_sub1"{
+  vpc_id = data.aws_vpc.awsome_vpc.id
 }
 
 data "template_file" "user_data" {
@@ -73,7 +72,7 @@ resource "aws_instance" "app_server" {
   instance_type           = var.instance_type
   vpc_security_group_ids  = [aws_security_group.app_server_sg.id]
   key_name                = "${aws_key_pair.deployer.key_name}"
-  subnet_id               = data.aws_subnet.awesome_pub_sub2.id
+  subnet_id               = tolist(data.aws_subnet_ids.pub_sub1.ids)[4]
   user_data               = data.template_file.user_data.rendered
   tags = {
     Name = var.server_name
